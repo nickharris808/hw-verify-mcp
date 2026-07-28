@@ -79,7 +79,7 @@ The agent writes the obvious early-exit comparator and calls `check_constant_tim
   "observation": "done",
   "reaching_secrets": ["x", "y"],
   "cone_size": 9,
-  "model": "Syntactic fan-in cone of the observation signal, including every enclosing if/case guard. Over-approximate: CONSTANT_TIME is conservative.",
+  "model": "Syntactic fan-in cone of the observation signal, including every enclosing if/case guard. Over-approximate within the supported subset, so CONSTANT_TIME is conservative there; anything outside the subset returns UNKNOWN rather than a verdict.",
   "next_step": "The completion signal depends on x, y. Make the completion condition a function of a data-oblivious counter rather than of operand values: run the loop a fixed number of cycles and drop any early-exit branch. Then call this tool again — a verdict you assert yourself does not count."
 }
 ```
@@ -137,7 +137,11 @@ Everything the server inherits from its three backends, it also inherits the lim
 
 - **Constant-time** verdicts cover *completion timing* against declared secrets — not
   power, EM, cache, or microarchitectural channels. The checker is a syntactic
-  over-approximation, so `CONSTANT_TIME` is conservative and `LEAKY` may be pessimistic.
+  over-approximation *within the supported subset*, so `CONSTANT_TIME` is conservative
+  there and `LEAKY` may be pessimistic. A design outside the subset (submodule
+  instantiation, `for`, `generate`, `function`, macro) returns `UNKNOWN` with a
+  `next_step` telling the agent it has **not** been shown constant-time; `find_leak`
+  returns `leaks: null` rather than `false`, so an agent cannot read it as clean.
 - **Masking** is glitch-free, first-order (`d=1`), 2-share probing. The report separates
   mean-invariance from whole-distribution invariance and says which was established.
 - **Patch completeness** is reachability in modelled bit semantics — not an RCE claim —
@@ -161,7 +165,7 @@ more useful than one that silently never learns it exists.
 pip install -e . && pytest tests -q && ruff check .
 ```
 
-25 tests: the tool functions directly, one real MCP session over the in-memory transport,
+24 tests: the tool functions directly, one real MCP session over the in-memory transport,
 and one that drives the **installed `hw-verify-mcp` binary** over stdio JSON-RPC (skipped
 if the package is not on `PATH`). A further test asserts `mcp-manifest.json` lists exactly
 the tools the server exposes, so the manifest cannot drift.

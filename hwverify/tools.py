@@ -18,7 +18,8 @@ from typing import Any
 # degrades to a clear message rather than breaking the whole server.
 try:
     from ctbench.cli import FIXTURES, run_reference
-    from ctbench.cone import analyse as ct_analyse
+    from ctbench.cone import UNKNOWN as CT_UNKNOWN
+    from ctbench.cone import check as ct_check
     from ctbench.score import format_report, load_manifest
     from ctbench.score import score as ct_score
 
@@ -73,13 +74,24 @@ def check_constant_time(
             "no secrets declared. Secrets are a specification choice and are never "
             "inferred: pass the input names that carry sensitive values."
         )
-    v = ct_analyse(verilog, observation, secrets, module)
+    v = ct_check(verilog, observation, secrets, module)
     out = v.to_dict()
     out["model"] = (
         "Syntactic fan-in cone of the observation signal, including every enclosing "
-        "if/case guard. Over-approximate: CONSTANT_TIME is conservative."
+        "if/case guard. Over-approximate within the supported subset, so CONSTANT_TIME "
+        "is conservative there; anything outside the subset returns UNKNOWN rather "
+        "than a verdict."
     )
-    if v.constant_time:
+    if v.status == CT_UNKNOWN:
+        # The agent-facing case that matters most: an LLM handed "no verdict" will
+        # otherwise narrate it as success. Say plainly that nothing was established.
+        out["next_step"] = (
+            f"NO VERDICT was reached, so this design has NOT been shown to be "
+            f"constant-time — do not report it as passing. {v.reason} "
+            f"Rewrite the module as a single flat module of assign/always statements "
+            f"and call this tool again, or analyse the submodule directly."
+        )
+    elif v.constant_time:
         out["next_step"] = (
             "No secret reaches the completion signal. Note this covers completion "
             "timing only, not power, EM, or cache channels."
@@ -102,7 +114,11 @@ def find_leak(
     """Name the secrets that reach the observation signal, or report none."""
     r = check_constant_time(verilog, observation, secrets, module)
     return {
-        "leaks": r["verdict"] == "LEAKY",
+        # A tri-state, deliberately: `leaks` is None when no verdict was reached, so
+        # a caller writing `if not result["leaks"]` cannot silently treat an
+        # unanalysable design as leak-free.
+        "leaks": None if r["verdict"] == "UNKNOWN" else r["verdict"] == "LEAKY",
+        "verdict": r["verdict"],
         "observation": r["observation"],
         "reaching_secrets": r["reaching_secrets"],
         "cone_size": r["cone_size"],
