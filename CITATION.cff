@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: "hw-verify-mcp: hardware security checkers as MCP tools for AI agents"
+message: "If you use this in academic work, please cite it."
+type: software
+authors:
+  - alias: nickharris808
+    website: "https://github.com/nickharris808"
+repository-code: "https://github.com/nickharris808/hw-verify-mcp"
+url: "https://huggingface.co/spaces/nickh007/hw-verify"
+abstract: >-
+  Exposes constant-time, masking, and patch-completeness checkers over the Model Context Protocol, so an agent writing hardware gets a checker it cannot argue with. Every refusal carries a next step, the agent cannot set the verdict itself, and a design the analysis cannot read returns a null rather than a false clean result.
+keywords:
+  - mcp
+  - ai agents
+  - hardware security
+  - constant-time
+  - formal verification
+license: Apache-2.0
+version: "0.1.0"
+date-released: "2026-07-28"
