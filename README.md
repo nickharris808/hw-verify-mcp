@@ -167,6 +167,24 @@ Note for anyone writing their own client: keep stdin **open**. Closing it immedi
 writing makes the server shut down before later replies are flushed — that is correct
 stdio behaviour, and it will look like a hang or a dropped response if you batch-write.
 
+<!-- portfolio:start -->
+## Part of the hw-verify toolkit
+
+Six open tools and a dataset for proving security properties of hardware and bounds checks. They share one boundary: **everything open analyses a design you disclose in full.**
+
+| Project | What it does |
+|---|---|
+| [`ctbench`](https://github.com/nickharris808/ctbench) | Matched-pair constant-time RTL benchmark + leaderboard |
+| [`patchproof`](https://github.com/nickharris808/patchproof) | Prove a bounds-check fix eliminates *every* violating input |
+| [`ct-mask`](https://github.com/nickharris808/ct-mask) | First-order masking verification by two certificates |
+| **`hw-verify-mcp`** (you are here) | MCP server — all three checkers, for AI agents |
+| [`ct-audit-action`](https://github.com/nickharris808/ct-audit-action) | GitHub Action — fail a PR on a leaky completion signal |
+| [`hw-verify demo`](https://github.com/nickharris808/hw-verify-space) | Browser demo of all three checkers |
+| [`hw-verify` dataset](https://huggingface.co/datasets/nickh007/hw-verify) | 49 records, 3 splits, byte-reproducible from these tools |
+
+**The commercial boundary.** Proving a property to a third party who never receives the design — a verdict bound to a commitment of a design that stays hidden — is a different problem and a commercial one. It is not in any of these packages.
+<!-- portfolio:end -->
+
 ## License
 
 Apache-2.0. See [LICENSE](LICENSE). Contributing: [CONTRIBUTING.md](CONTRIBUTING.md).
