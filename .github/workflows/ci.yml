@@ -23,7 +23,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
       - name: Install sibling analysis packages
-        run: pip install ctbench ct-mask patchproof
+        run: |
+          pip install \
+            git+https://github.com/nickharris808/ctbench@main \
+            git+https://github.com/nickharris808/ct-mask@main \
+            git+https://github.com/nickharris808/patchproof@main
       - name: Install
         run: pip install -e ".[dev]"
       - name: Test

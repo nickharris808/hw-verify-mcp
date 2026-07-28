@@ -19,9 +19,13 @@ classifiers = [
 ]
 dependencies = [
   "mcp>=1.2,<2",
-  "ctbench>=1.0",
-  "ct-mask>=0.1",
-  "patchproof>=0.1",
+  # Not on PyPI yet, so referenced directly from their public repositories: this is
+  # what makes `pip install .` work today in a clean environment. PEP 508 direct
+  # references cannot be uploaded to PyPI, so replace these with plain version
+  # specifiers at the point the three checkers are published.
+  "ctbench @ git+https://github.com/nickharris808/ctbench@main",
+  "ct-mask @ git+https://github.com/nickharris808/ct-mask@main",
+  "patchproof @ git+https://github.com/nickharris808/patchproof@main",
 ]
 
 [project.optional-dependencies]
