@@ -1,0 +1,22 @@
+{
+  "name": "hw-verify",
+  "version": "0.1.0",
+  "description": "Constant-time, masking, and patch-completeness verification for hardware and bounds checks, exposed to AI agents.",
+  "license": "Apache-2.0",
+  "server": {
+    "command": "hw-verify-mcp",
+    "args": [],
+    "transport": "stdio"
+  },
+  "install": {
+    "pip": "hw-verify-mcp"
+  },
+  "tools": [
+    "check_constant_time", "find_leak",
+    "list_benchmark_fixtures", "get_benchmark_fixture",
+    "score_benchmark_submission", "run_reference_checker",
+    "check_masking", "list_masking_gadgets",
+    "check_patch_complete", "list_defect_classes", "replay_certificate",
+    "prove_confidential"
+  ]
+}
