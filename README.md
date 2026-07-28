@@ -174,6 +174,11 @@ Note for anyone writing their own client: keep stdin **open**. Closing it immedi
 writing makes the server shut down before later replies are flushed — that is correct
 stdio behaviour, and it will look like a hang or a dropped response if you batch-write.
 
+## Documentation
+
+- [SCOPE.md](SCOPE.md) — what the three checkers prove, and why `UNKNOWN` reaches the
+  agent as `leaks: null` rather than `false`.
+
 <!-- portfolio:start -->
 ## Part of the hw-verify toolkit
 
