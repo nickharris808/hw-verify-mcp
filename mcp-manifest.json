@@ -9,14 +9,21 @@
     "transport": "stdio"
   },
   "install": {
-    "pip": "hw-verify-mcp"
+    "pip": "git+https://github.com/nickharris808/hw-verify-mcp@main",
+    "note": "Not on PyPI yet (name unclaimed as of 2026-07-30). Install from git."
   },
   "tools": [
-    "check_constant_time", "find_leak",
-    "list_benchmark_fixtures", "get_benchmark_fixture",
-    "score_benchmark_submission", "run_reference_checker",
-    "check_masking", "list_masking_gadgets",
-    "check_patch_complete", "list_defect_classes", "replay_certificate",
+    "check_constant_time",
+    "find_leak",
+    "list_benchmark_fixtures",
+    "get_benchmark_fixture",
+    "score_benchmark_submission",
+    "run_reference_checker",
+    "check_masking",
+    "list_masking_gadgets",
+    "check_patch_complete",
+    "list_defect_classes",
+    "replay_certificate",
     "prove_confidential"
   ]
 }
