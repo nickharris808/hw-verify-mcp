@@ -16,6 +16,7 @@ from mcp.server.stdio import stdio_server
 from mcp.types import TextContent, Tool
 
 from . import tools
+from . import __version__
 
 SERVER_NAME = "hw-verify"
 
@@ -201,7 +202,10 @@ def dispatch(name: str, arguments: dict[str, Any] | None) -> dict[str, Any]:
 
 
 def build_server() -> Server:
-    server = Server(SERVER_NAME)
+    # Pass our own version explicitly. Without it the MCP SDK reports *its* version in
+    # `serverInfo.version`, so a client saw "hw-verify 1.29.0" (the `mcp` library version)
+    # for a package that is 0.1.0. Found 2026-08-13 by handshaking the built server.
+    server = Server(SERVER_NAME, version=__version__)
 
     @server.list_tools()
     async def _list_tools() -> list[Tool]:
